@@ -11,14 +11,15 @@ class Book(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(5)])
     author = models.CharField(null=True, max_length=100)
     is_bestselling = models.BooleanField(default=False)
-    slug = models.SlugField(default="", null=False, db_index=True) # Harry Potter 1 => harry-potter-1
+    slug = models.SlugField(default="", blank=True, null=False, db_index=True) # Harry Potter 1 => harry-potter-1
     
     def get_absolute_url(self):
         return reverse("book-detail-page", kwargs={"slug": self.slug})
-    
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
+
+    # No need for that function because it's already slugified in admin.py in prepopulated_fields
+    # def save(self, *args, **kwargs):
+    #     self.slug = slugify(self.title)
+    #     super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.title} ({self.rating})"
